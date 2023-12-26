@@ -12,7 +12,13 @@ function App() {
 
   const fetchServerMessage = async () => {
     try {
-      const response = await fetch("http://localhost:5000/"); // Update the URL to match your server's address
+      // Use the environment variable for the server URL only during development
+      const apiUrl =
+        process.env.NODE_ENV === "development"
+          ? process.env.REACT_APP_API_URL || "http://localhost:5000"
+          : "https://vercel-deployment-server-sage.vercel.app";
+
+      const response = await fetch(apiUrl);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }

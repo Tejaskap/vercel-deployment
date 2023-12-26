@@ -2,8 +2,16 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
-// Enable CORS for all routes
-app.use(cors());
+// Determine the CORS origin based on the environment
+const corsOptions = {
+  origin:
+    process.env.NODE_ENV === "development"
+      ? "https://vercel-deployment-client-eosin.vercel.app"
+      : "http://localhost:5000", // Use a default value for non-development environments
+};
+
+// Enable CORS with dynamic origin
+app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
   res.send("Hello, World from the Server!");

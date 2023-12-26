@@ -1,16 +1,17 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+require("dotenv").config();
 
-// Determine the CORS origin based on the environment
 const corsOptions = {
   origin:
     process.env.NODE_ENV === "development"
-      ? "https://vercel-deployment-client-eosin.vercel.app"
-      : "http://localhost:5000", // Use a default value for non-development environments
+      ? "http://localhost:3000"
+      : "https://vercel-deployment-client-eosin.vercel.app",
+  optionsSuccessStatus: 200,
 };
 
-// Enable CORS with dynamic origin
+// Enable CORS with dynamic origin and optionsSuccessStatus
 app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {

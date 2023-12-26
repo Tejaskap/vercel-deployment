@@ -15,7 +15,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
-  res.send("Hello, World from the Server!");
+  res.send("Hello, World from the Tejas's Server!");
 });
 
 const PORT = process.env.PORT || 5000;

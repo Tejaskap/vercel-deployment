@@ -3,16 +3,9 @@ const cors = require("cors");
 const app = express();
 require("dotenv").config();
 
-const corsOptions = {
-  origin:
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3000"
-      : "https://vercel-deployment-client-ashy.vercel.app/",
-  optionsSuccessStatus: 200,
-};
-
 // Enable CORS with dynamic origin and optionsSuccessStatus
-app.use(cors(corsOptions));
+// Enable CORS with wildcard origin to allow all
+app.use(cors({ origin: "*" }));
 
 app.get("/", (req, res) => {
   res.send("Hello, World from the Tejas's Server!");

@@ -7,7 +7,7 @@ const corsOptions = {
   origin:
     process.env.NODE_ENV === "development"
       ? "http://localhost:3000"
-      : "https://vercel-deployment-client-eosin.vercel.app",
+      : "https://vercel-deployment-client-ashy.vercel.app/",
   optionsSuccessStatus: 200,
 };
 

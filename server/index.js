@@ -15,6 +15,12 @@ app.use(
 );
 app.use(bodyParser.json());
 
+// Handle preflight CORS requests for /api/display-events
+app.options("/api/display-events", cors());
+
+// Handle preflight CORS requests for /api/create-event
+app.options("/api/create-event", cors());
+
 app.get("/", (req, res) => {
   res.send("Hello, World from the Tejas's Server!");
 });

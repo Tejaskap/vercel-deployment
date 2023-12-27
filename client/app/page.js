@@ -17,7 +17,10 @@ const API_ENDPOINT_CREATE_EVENT = `${API_BASE_URL}/api/create-event`;
 async function getData(startTime, endTime) {
   try {
     const res = await fetch(
-      `${API_ENDPOINT}?startTime=${startTime}&endTime=${endTime}`
+      `${API_ENDPOINT}?startTime=${startTime}&endTime=${endTime}`,
+      {
+        mode: "cors", // Add this line
+      }
     );
 
     if (!res.ok) {

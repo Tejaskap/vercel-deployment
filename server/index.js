@@ -15,6 +15,9 @@ app.use(
   })
 );
 
+// Handle OPTIONS request for create-event
+app.options("/api/create-event", cors());
+
 app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
@@ -43,7 +46,6 @@ const getCurrentDateTimeForCalendar = () => {
   };
 };
 
-// Display Events
 // Display Events
 app.get("/api/display-events", async (req, res) => {
   try {

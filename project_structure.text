@@ -3,10 +3,19 @@
   - .eslintrc.json
   - .gitignore
   - app
+    - components
+      - BookingForm.js
+      - CalendarComponent.js
+      - LoadingIndicator.js
+      - TimeSlots.js
     - favicon.ico
     - globals.css
     - layout.js
     - page.js
+    - styles
+      - globals.css
+      - LoadingIndicator.css
+      - styles.css
   - jsconfig.json
   - next.config.js
   - package-lock.json
@@ -18,11 +27,13 @@
   - README.md
   - tailwind.config.js
 - project_structure.text
-- README.md
 - server
   - .env
   - .gitignore
-  - index.js
+  - api
+    - index.js
+  - lib
+    - googleCalendar.js
   - package-lock.json
   - package.json
   - vercel.json

@@ -64,7 +64,9 @@ export default function Home() {
         endDateTime.toISOString()
       );
       setData(result);
+      console.log("Result", result);
     } catch (error) {
+      console.log("Full error", error);
       console.error("Error fetching data:", error.message);
     }
   };

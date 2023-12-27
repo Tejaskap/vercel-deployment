@@ -45,6 +45,7 @@ const getCurrentDateTimeForCalendar = () => {
 
 // Display Events
 app.get("/api/display-events", cors(), async (req, res) => {
+  console.log(req);
   try {
     const { startTime, endTime } = req.query; // Use req.query here
     const events = await googleCalendar.displayEventTimes(startTime, endTime);

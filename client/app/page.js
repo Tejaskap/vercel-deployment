@@ -10,12 +10,13 @@ import TimeSlots from "./components/TimeSlots";
 const API_BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:5000"
-    : "https://vercel-deployment-client-eosin.vercel.app/";
+    : "https://vercel-deployment-client-eosin.vercel.app";
 
 const API_ENDPOINT = `${API_BASE_URL}/api/display-events`;
 const API_ENDPOINT_CREATE_EVENT = `${API_BASE_URL}/api/create-event`;
 
 async function getData(startTime, endTime) {
+  console.log("Get Data Function"); // delete later
   try {
     const res = await fetch(
       `${API_ENDPOINT}?startTime=${startTime}&endTime=${endTime}`

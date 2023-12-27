@@ -16,8 +16,8 @@ const API_ENDPOINT = `${API_BASE_URL}/api/display-events`;
 const API_ENDPOINT_CREATE_EVENT = `${API_BASE_URL}/api/create-event`;
 
 async function getData(startTime, endTime) {
-  console.log("Get Data Function"); // delete later
   try {
+    console.log("Get Data Function"); // delete later
     const res = await fetch(
       `${API_ENDPOINT}?startTime=${startTime}&endTime=${endTime}`
     );
@@ -28,6 +28,7 @@ async function getData(startTime, endTime) {
     console.log(res.json);
     return res.json();
   } catch (error) {
+    console.log(error);
     console.error("Error fetching data:", error.message);
     return [];
   }
@@ -63,8 +64,10 @@ export default function Home() {
         startDateTime.toISOString(),
         endDateTime.toISOString()
       );
+      if (!result) {
+        throw new Error("Invalid data received from the server");
+      }
       setData(result);
-      console.log("Result", result);
     } catch (error) {
       console.log("Full error", error);
       console.error("Error fetching data:", error.message);

@@ -10,7 +10,7 @@ module.exports = {
           { key: "Access-Control-Allow-Credentials", value: "true" },
           {
             key: "Access-Control-Allow-Origin",
-            value: "https://vercel-deployment-server-sage.vercel.app/",
+            value: "https://vercel-deployment-server-sage.vercel.app",
           },
           {
             key: "Access-Control-Allow-Methods",

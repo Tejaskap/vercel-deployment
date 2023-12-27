@@ -7,7 +7,10 @@ import React, { useState, useEffect } from "react";
 import CalendarComponent from "./components/CalendarComponent";
 import TimeSlots from "./components/TimeSlots";
 
-const API_BASE_URL = "https://vercel-deployment-client-eosin.vercel.app";
+const API_BASE_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:5000"
+    : "https://vercel-deployment-client-eosin.vercel.app";
 
 const API_ENDPOINT = `${API_BASE_URL}/api/display-events`;
 const API_ENDPOINT_CREATE_EVENT = `${API_BASE_URL}/api/create-event`;

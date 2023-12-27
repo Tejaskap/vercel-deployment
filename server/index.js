@@ -12,6 +12,7 @@ app.use(
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
     allowedHeaders: "*",
+    optionsSuccessStatus: 200,
   })
 );
 

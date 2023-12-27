@@ -1,19 +1,34 @@
 // Home.js
-
-// @ts-nocheck
 "use client";
 
 import React, { useState, useEffect } from "react";
 import CalendarComponent from "./components/CalendarComponent";
 import TimeSlots from "./components/TimeSlots";
 
+// Constants
 const API_BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:5000"
-    : "https://vercel-deployment-server-sage.vercel.app";
+    : "https://vercel-deployment-client-eosin.vercel.app";
 
 const API_ENDPOINT = `${API_BASE_URL}/api/display-events`;
 const API_ENDPOINT_CREATE_EVENT = `${API_BASE_URL}/api/create-event`;
+const WORK_HOURS_START = 8;
+const WORK_HOURS_END = 20;
+const TIME_INTERVAL = 1;
+
+// Utility Functions
+function generateTimeSlots(startHour, endHour, interval) {
+  const timeSlots = [];
+  let currentHour = startHour;
+  while (currentHour < endHour) {
+    const startTime = `${currentHour < 10 ? "0" : ""}${currentHour}:00`;
+    const endTime = `${currentHour + 1 < 10 ? "0" : ""}${currentHour + 1}:00`;
+    timeSlots.push({ startTime, endTime });
+    currentHour += interval;
+  }
+  return timeSlots;
+}
 
 async function getData(startTime, endTime) {
   try {
@@ -31,25 +46,37 @@ async function getData(startTime, endTime) {
   }
 }
 
-const generateTimeSlots = (startHour, endHour, interval) => {
-  const timeSlots = [];
-  let currentHour = startHour;
-  while (currentHour < endHour) {
-    const startTime = `${currentHour < 10 ? "0" : ""}${currentHour}:00`;
-    const endTime = `${currentHour + 1 < 10 ? "0" : ""}${currentHour + 1}:00`;
-    timeSlots.push({ startTime, endTime });
-    currentHour += interval;
-  }
-  return timeSlots;
-};
-
+// Component
 export default function Home() {
+  // State variables
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [data, setData] = useState([]);
   const [timeSlots, setTimeSlots] = useState([]);
-  const [bookingSlot, setBookingSlot] = useState(null); // Initial state set to null
+  const [bookingSlot, setBookingSlot] = useState(null);
   const [clientName, setClientName] = useState("");
 
+  // Fetch data on component mount
+  useEffect(() => {
+    const startDateTime = new Date(selectedDate);
+    startDateTime.setHours(8, 0, 0, 0);
+
+    const endDateTime = new Date(selectedDate);
+    endDateTime.setHours(20, 0, 0, 0);
+
+    fetchData(startDateTime, endDateTime);
+
+    const generatedTimeSlots = generateTimeSlots(
+      WORK_HOURS_START,
+      WORK_HOURS_END,
+      TIME_INTERVAL
+    );
+    setTimeSlots(generatedTimeSlots);
+
+    // Reset bookingSlot when the date changes
+    setBookingSlot(null);
+  }, [selectedDate]); // Dependency array for component mount and date changes
+
+  // Fetch data from the server
   const fetchData = async (startDateTime, endDateTime) => {
     try {
       console.log(
@@ -71,15 +98,7 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    const generatedTimeSlots = generateTimeSlots(8, 20, 1);
-    console.log("Generated time slots:", generatedTimeSlots);
-    setTimeSlots(generatedTimeSlots);
-
-    // Reset bookingSlot when the date changes
-    setBookingSlot(null);
-  }, [selectedDate]);
-
+  // Event handlers
   const onSelectDate = (date) => {
     setSelectedDate(date);
 
@@ -91,8 +110,11 @@ export default function Home() {
 
     fetchData(startDateTime, endDateTime);
 
-    const generatedTimeSlots = generateTimeSlots(8, 20, 1);
-    console.log("Generated time slots:", generatedTimeSlots);
+    const generatedTimeSlots = generateTimeSlots(
+      WORK_HOURS_START,
+      WORK_HOURS_END,
+      TIME_INTERVAL
+    );
     setTimeSlots(generatedTimeSlots);
   };
 
@@ -172,6 +194,7 @@ export default function Home() {
     setBookingSlot(null);
   };
 
+  // Component composition
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
       <div className="w-full md:max-w-screen-md p-4">

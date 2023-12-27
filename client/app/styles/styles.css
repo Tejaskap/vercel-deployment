@@ -1,0 +1,82 @@
+/* styles.css */
+body {
+  background-color: #ffffff;
+}
+
+.react-calendar {
+  background-color: #ffffff;
+}
+
+.react-calendar__tile {
+  color: #000000;
+  border: 1px solid #000000;
+}
+
+.react-calendar__tile:hover {
+  background-color: #f0f4f8;
+}
+
+.react-calendar__tile--active {
+  background-color: #3498db;
+  color: #ffffff;
+}
+
+.react-calendar__navigation__label,
+.react-calendar__navigation__arrow {
+  color: #3498db;
+}
+
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem; /* Adjust padding for better appearance */
+}
+
+.datepicker-header {
+  margin-bottom: 15px;
+}
+
+.today_button {
+  background-color: #000000;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.today_button:hover {
+  background-color: #000000;
+}
+
+/* styles.css */
+/* Add this media query to apply styles for screens with a maximum width of 640px (adjust as needed) */
+@media screen and (max-width: 640px) {
+  .flex-container {
+    flex-direction: column;
+  }
+
+  .input-container {
+    width: 100%;
+    margin-bottom: 1rem; /* Add some space between input and buttons */
+  }
+
+  .button-container {
+    margin-top: 1rem; /* Add some space between buttons */
+  }
+}
+
+/* Keep your existing styles for larger screens */
+.flex-container {
+  display: flex;
+}
+
+.input-container {
+  flex: 1; /* Make the input fill the available space */
+  margin-right: 1rem; /* Add some space between input and buttons */
+}
+
+.button-container {
+  display: flex;
+}

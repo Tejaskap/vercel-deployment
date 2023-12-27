@@ -5,13 +5,30 @@ const app = express();
 const googleCalendar = require("./lib/googleCalendar");
 require("dotenv").config();
 
+const allowedOrigins = [
+  "http://localhost:5000",
+  "https://vercel-deployment-client-eosin.vercel.app",
+];
+
 // Enable CORS with wildcard origin to allow all
+// app.use(
+//   cors({
+//     origin: "*",
+//     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+//     credentials: true,
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   })
+// );
+
 app.use(
   cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
   })
 );
 

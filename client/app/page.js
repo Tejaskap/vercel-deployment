@@ -17,7 +17,6 @@ const API_ENDPOINT_CREATE_EVENT = `${API_BASE_URL}/api/create-event`;
 
 async function getData(startTime, endTime) {
   try {
-    console.log("Get Data Function"); // delete later
     const res = await fetch(
       `${API_ENDPOINT}?startTime=${startTime}&endTime=${endTime}`
     );
@@ -25,10 +24,8 @@ async function getData(startTime, endTime) {
     if (!res.ok) {
       throw new Error("Failed to fetch data");
     }
-    console.log(res.json);
     return res.json();
   } catch (error) {
-    console.log(error);
     console.error("Error fetching data:", error.message);
     return [];
   }

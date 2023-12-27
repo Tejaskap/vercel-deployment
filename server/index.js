@@ -5,11 +5,6 @@ const app = express();
 const googleCalendar = require("./lib/googleCalendar");
 require("dotenv").config();
 
-const allowedOrigins = [
-  "http://localhost:5000",
-  "https://vercel-deployment-client-eosin.vercel.app",
-];
-
 // Enable CORS with wildcard origin to allow all
 app.use(
   cors({
@@ -50,7 +45,6 @@ const getCurrentDateTimeForCalendar = () => {
 
 // Display Events
 app.get("/api/display-events", cors(), async (req, res) => {
-  console.log("Request at display events", req);
   try {
     const { startTime, endTime } = req.query; // Use req.query here
     const events = await googleCalendar.displayEventTimes(startTime, endTime);

@@ -2,7 +2,7 @@ const { google } = require("googleapis");
 require("dotenv").config();
 
 // Load environment variables
-CREDENTIALS = {
+const CREDENTIALS = {
   type: "service_account",
   project_id: "chromatic-fx-404318",
   private_key_id: "e6742b88be155ac7fa42f114880bf157c5a942d6",
@@ -18,12 +18,11 @@ CREDENTIALS = {
     "https://www.googleapis.com/robot/v1/metadata/x509/tesing-google-calender-api%40chromatic-fx-404318.iam.gserviceaccount.com",
   universe_domain: "googleapis.com",
 };
-CALENDAR_ID = parseInt(
-  "9bd42a48cf019b21317287fffbb7c4bfe2310969869a0ff4e65721a7f1ad0939@group.calendar.google.com"
-);
+const CALENDAR_ID =
+  "9bd42a48cf019b21317287fffbb7c4bfe2310969869a0ff4e65721a7f1ad0939@group.calendar.google.com";
 const SCOPES = "https://www.googleapis.com/auth/calendar";
 const TIMEOFFSET = "+01:00";
-console.log("Credentials", CREDENTIALS);
+
 // Create an auth object using JWT
 const auth = new google.auth.JWT(
   CREDENTIALS.client_email,

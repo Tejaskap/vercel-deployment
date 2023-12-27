@@ -6,7 +6,7 @@ const CREDENTIALS = JSON.parse(process.env.CREDENTIALS);
 const CALENDAR_ID = process.env.CALENDAR_ID;
 const SCOPES = "https://www.googleapis.com/auth/calendar";
 const TIMEOFFSET = "+01:00";
-
+console.log("Credentials", CREDENTIALS);
 // Create an auth object using JWT
 const auth = new google.auth.JWT(
   CREDENTIALS.client_email,

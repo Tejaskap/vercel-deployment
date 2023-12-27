@@ -44,9 +44,10 @@ const getCurrentDateTimeForCalendar = () => {
 };
 
 // Display Events
-app.get("/api/display-events", cors(), async (req, res) => {
+// Display Events
+app.get("/api/display-events", async (req, res) => {
   try {
-    const { startTime, endTime } = req.query; // Use req.query here
+    const { startTime, endTime } = req.query;
     const events = await googleCalendar.displayEventTimes(startTime, endTime);
     console.log("json response", events);
     res.json(events);
@@ -56,7 +57,7 @@ app.get("/api/display-events", cors(), async (req, res) => {
   }
 });
 
-app.post("/api/create-event", cors(), async (req, res) => {
+app.post("/api/create-event", async (req, res) => {
   try {
     const eventData = req.body; // Assume eventData already contains start and end properties
     const events = await googleCalendar.insertEvent(eventData);
@@ -68,7 +69,7 @@ app.post("/api/create-event", cors(), async (req, res) => {
   }
 });
 
-app.get("/api/current-datetime", cors(), (req, res) => {
+app.get("/api/current-datetime", (req, res) => {
   try {
     const { start, end } = getCurrentDateTimeForCalendar();
     res.json({ start, end });

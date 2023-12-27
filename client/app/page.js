@@ -24,7 +24,7 @@ async function getData(startTime, endTime) {
     if (!res.ok) {
       throw new Error("Failed to fetch data");
     }
-
+    console.log(res.json);
     return res.json();
   } catch (error) {
     console.error("Error fetching data:", error.message);

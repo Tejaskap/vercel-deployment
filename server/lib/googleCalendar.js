@@ -2,7 +2,10 @@ const { google } = require("googleapis");
 require("dotenv").config();
 
 // Load environment variables
-const CREDENTIALS = JSON.parse(process.env.CREDENTIALS);
+const CREDENTIALS = process.env.CREDENTIALS
+  ? JSON.parse(process.env.CREDENTIALS)
+  : null;
+
 const CALENDAR_ID = process.env.CALENDAR_ID;
 const SCOPES = "https://www.googleapis.com/auth/calendar";
 const TIMEOFFSET = "+01:00";

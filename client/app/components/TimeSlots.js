@@ -1,7 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import LoadingIndicator from "./LoadingIndicator";
-import _ from "lodash";
-import isEqual from "lodash/isEqual";
 // Utility function to get day name
 const getDayName = (dayIndex) => {
   const days = [
@@ -18,27 +16,10 @@ const getDayName = (dayIndex) => {
 
 const TimeSlots = ({ timeSlots, data, selectedDate, onAddNow }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [addedSlot, setAddedSlot] = useState(null);
+  const [addedSlots, setAddedSlots] = useState(new Set());
 
   const isTimeOverlap = (start1, end1, start2, end2) => {
     return start1 < end2 && end1 > start2;
-  };
-
-  const areObjectsEqual = (obj1, obj2) => {
-    const keys1 = Object.keys(obj1);
-    const keys2 = Object.keys(obj2);
-
-    if (keys1.length !== keys2.length) {
-      return false;
-    }
-
-    for (const key of keys1) {
-      if (obj1[key] !== obj2[key]) {
-        return false;
-      }
-    }
-
-    return true;
   };
 
   const availableTimeSlots = useMemo(() => {
@@ -80,16 +61,15 @@ const TimeSlots = ({ timeSlots, data, selectedDate, onAddNow }) => {
   }, [selectedDate, timeSlots]);
 
   const handleAddNow = (slot) => {
-    const dataToCheck = {
-      startTime: slot.startTime,
-      endTime: slot.endTime,
-      date: selectedDate.toDateString(),
-      day: getDayName(selectedDate.getDay()),
-    };
-
-    if (!data.some((event) => areObjectsEqual(event, dataToCheck))) {
-      setAddedSlot(dataToCheck);
-      onAddNow(dataToCheck);
+    const timeSlotString = `${slot.startTime} - ${slot.endTime}`;
+    if (!addedSlots.has(timeSlotString)) {
+      setAddedSlots(new Set([...addedSlots, timeSlotString]));
+      onAddNow({
+        startTime: slot.startTime,
+        endTime: slot.endTime,
+        date: selectedDate.toDateString(),
+        day: getDayName(selectedDate.getDay()),
+      });
     }
   };
 
@@ -111,14 +91,16 @@ const TimeSlots = ({ timeSlots, data, selectedDate, onAddNow }) => {
                 <div className="flex space-x-4">
                   <button
                     className={`${
-                      addedSlot && areObjectsEqual(addedSlot, slot)
+                      addedSlots.has(`${slot.startTime} - ${slot.endTime}`)
                         ? "bg-green-500"
                         : "bg-blue-500"
                     } text-white py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue active:bg-blue-800 text-sm transition duration-300 ease-in-out`}
                     onClick={() => handleAddNow(slot)}
-                    disabled={addedSlot && areObjectsEqual(addedSlot, slot)}
+                    disabled={addedSlots.has(
+                      `${slot.startTime} - ${slot.endTime}`
+                    )}
                   >
-                    {addedSlot && areObjectsEqual(addedSlot, slot)
+                    {addedSlots.has(`${slot.startTime} - ${slot.endTime}`)
                       ? "Added"
                       : "Add Now"}
                   </button>

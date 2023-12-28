@@ -80,3 +80,42 @@ body {
 .button-container {
   display: flex;
 }
+
+.booking-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.booking-item {
+  border: 1px solid #ddd;
+  margin: 8px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.booking-time {
+  font-weight: bold;
+}
+
+.booking-date {
+  color: #555;
+}
+
+.no-bookings {
+  font-style: italic;
+  color: #555;
+}
+
+.book-now-button {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.book-now-button:hover {
+  background-color: #2980b9;
+}

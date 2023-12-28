@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from "react";
 import CalendarComponent from "./components/CalendarComponent";
 import TimeSlots from "./components/TimeSlots";
+import BookingForm from "./components/BookingForm";
 
 // Constants
 const API_BASE_URL =
@@ -54,6 +55,7 @@ export default function Home() {
   const [timeSlots, setTimeSlots] = useState([]);
   const [bookingSlot, setBookingSlot] = useState(null);
   const [clientName, setClientName] = useState("");
+  const [bookingData, setBookingData] = useState(null);
 
   // Fetch data on component mount
   useEffect(() => {
@@ -120,6 +122,11 @@ export default function Home() {
 
   const handleBookNow = (startTime, endTime) => {
     setBookingSlot({ startTime, endTime });
+  };
+
+  const handleAddNowToList = (data) => {
+    console.log("Data received in Home.js:", data);
+    setBookingData(data); // Save the data in state
   };
 
   const handleConfirmBooking = async () => {
@@ -199,8 +206,11 @@ export default function Home() {
     <div className="min-h-screen flex flex-col items-center justify-center">
       <div className="w-full md:max-w-screen-md p-4">
         <h1 className="text-3xl font-bold mb-6 text-center">
-          Book a Session with Tejas
+          I Am Available On:
         </h1>
+        <div className="w-full p-4 rounded-md">
+          <BookingForm bookingData={bookingData} />
+        </div>
         <div className="w-full p-4 rounded-md">
           <CalendarComponent onSelectDate={onSelectDate} />
         </div>
@@ -209,12 +219,7 @@ export default function Home() {
             timeSlots={timeSlots}
             data={data}
             selectedDate={selectedDate}
-            bookingSlot={bookingSlot}
-            handleBookNow={handleBookNow}
-            handleConfirmBooking={handleConfirmBooking}
-            handleCancelBooking={() => setBookingSlot(null)}
-            clientName={clientName}
-            setClientName={setClientName}
+            onAddNow={handleAddNowToList}
           />
         </div>
       </div>

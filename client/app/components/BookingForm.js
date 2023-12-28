@@ -1,63 +1,52 @@
 // BookingForm.js
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-const BookingForm = ({
-  bookingSlot,
-  handleConfirmBooking,
-  handleCancelBooking,
-  clientName,
-  setClientName,
-}) => {
-  console.log("bookingSlot in BookingForm:", bookingSlot);
+const BookingForm = ({ onBookNow, bookingData }) => {
+  const [bookingList, setBookingList] = useState([]);
 
-  const confirmBooking = () => {
-    // Ensure bookingSlot exists and has start and end times
-    if (bookingSlot && bookingSlot.startTime && bookingSlot.endTime) {
-      // Explicitly set start and end times for the event
-      const event = {
-        ...bookingSlot,
-        start: { dateTime: bookingSlot.startTime },
-        end: { dateTime: bookingSlot.endTime },
-      };
-
-      // Call handleConfirmBooking with the event data
-      handleConfirmBooking(event);
-    } else {
-      // Handle the case when bookingSlot is not set or doesn't have the required data
-      console.error("Invalid bookingSlot:", bookingSlot);
+  const handleBookNow = (bookingData) => {
+    if (bookingData) {
+      setBookingList([...bookingList, bookingData]);
+      onBookNow(bookingData);
     }
   };
 
+  useEffect(() => {
+    if (bookingData) {
+      setBookingList([...bookingList, bookingData]);
+    }
+  }, [bookingData]);
+
   return (
-    <>
-      {bookingSlot && (
-        <div className="flex-container">
-          <div className="input-container">
-            <input
-              type="text"
-              placeholder="Your Name"
-              value={clientName}
-              onChange={(e) => setClientName(e.target.value)}
-              className="border p-2"
-            />
-          </div>
-          <div className="button-container">
-            <button
-              onClick={confirmBooking}
-              className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600 focus:outline-none focus:shadow-outline-green active:bg-green-800"
-            >
-              Confirm
-            </button>
-            <button
-              onClick={handleCancelBooking}
-              className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 focus:outline-none focus:shadow-outline-red active:bg-red-800"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
+    <div>
+      <h2>Booking List:</h2>
+      {bookingList.length > 0 ? (
+        <ul className="booking-list">
+          {bookingList.map((booking, index) => (
+            <li key={index} className="booking-item">
+              <p>
+                <span className="booking-time">{`${booking.startTime} to ${booking.endTime}`}</span>
+                <span className="booking-date">{` - ${booking.date}`}</span>
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="no-bookings">
+          28th December - Monday - 08:00 to 09:00 - Add Your List Below
+        </p>
       )}
-    </>
+      <button
+        className="book-now-button"
+        onClick={() =>
+          handleBookNow({
+            /* your booking data here */
+          })
+        }
+      >
+        Book Now
+      </button>
+    </div>
   );
 };
 

@@ -6,17 +6,25 @@ import "../styles/styles.css";
 
 const CalendarComponent = ({ onSelectDate }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [isOpen, setOpen] = useState(false);
 
   const goToToday = () => {
     const today = new Date();
     setSelectedDate(today);
     onSelectDate(today);
+    setOpen(false);
   };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
     onSelectDate(date);
+    setOpen(false);
   };
+
+  // Close the calendar when the selected date changes
+  useEffect(() => {
+    setOpen(false);
+  }, [selectedDate]);
 
   return (
     <div className="calendar-container p-4">
@@ -30,6 +38,10 @@ const CalendarComponent = ({ onSelectDate }) => {
         onChange={handleDateChange}
         inline
         className="w-full"
+        calendarClassName="responsive-calendar" // Add this line
+        open={isOpen}
+        onClickOutside={() => setOpen(false)}
+        onFocus={() => setOpen(true)}
       />
     </div>
   );

@@ -2,7 +2,7 @@ const bodyParser = require("body-parser");
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const googleCalendar = require("../lib/googleCalendar");
+const googleCalendar = require("./lib/googleCalendar");
 require("dotenv").config();
 
 // Enable CORS with wildcard origin to allow all

@@ -25,6 +25,10 @@ app.get("/", (req, res) => {
   res.send("Hello, World from the Tejas's Server!");
 });
 
+app.get("/dusriroute", (req, res) => {
+  res.send("Hello frands, ye hai hamari dusri route");
+});
+
 // Display Events
 app.get("/api/display-events", async (req, res) => {
   try {

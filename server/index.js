@@ -25,6 +25,19 @@ app.get("/", (req, res) => {
   res.send("Hello, World from the Tejas's Server!");
 });
 
+// Display Events
+app.get("/api/display-events", async (req, res) => {
+  try {
+    const { startTime, endTime } = req.query;
+    const events = await googleCalendar.displayEventTimes(startTime, endTime);
+    console.log("json response", events);
+    res.json(events);
+  } catch (error) {
+    console.log("this is an error", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Define the getCurrentDateTimeForCalendar function
 const getCurrentDateTimeForCalendar = () => {
   const date = new Date();
@@ -46,19 +59,6 @@ const getCurrentDateTimeForCalendar = () => {
     end: endDate.toISOString(),
   };
 };
-
-// Display Events
-app.get("/api/display-events", async (req, res) => {
-  try {
-    const { startTime, endTime } = req.query;
-    const events = await googleCalendar.displayEventTimes(startTime, endTime);
-    console.log("json response", events);
-    res.json(events);
-  } catch (error) {
-    console.log("this is an error", error);
-    res.status(500).json({ error: error.message });
-  }
-});
 
 app.post("/api/create-event", async (req, res) => {
   try {

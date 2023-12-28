@@ -31,7 +31,7 @@ app.get("/api/display-events", async (req, res) => {
     const { startTime, endTime } = req.query;
     const events = await googleCalendar.displayEventTimes(startTime, endTime);
     console.log("json response", events);
-    res.json(events);
+    res.status(200).json(events).end();
   } catch (error) {
     console.log("this is an error", error);
     res.status(500).json({ error: error.message });

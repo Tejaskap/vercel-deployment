@@ -25,8 +25,8 @@ app.get("/", (req, res) => {
   res.send("Hello, World from the Tejas's Server!");
 });
 
-app.get("/dusriroute", (req, res) => {
-  res.send("Hello frands, ye hai hamari dusri route");
+app.get("/bhaibhai", (req, res) => {
+  res.send("bhaibhai");
 });
 
 // Display Events
@@ -85,7 +85,7 @@ app.get("/api/current-datetime", (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = "https://vercel-deployment-server-xi.vercel.app" || 5000;
 app.listen(PORT, () => {
   console.log(`Server started on PORT ${PORT}`);
 });

@@ -1,5 +1,5 @@
 - client
-  - .env
+  - .env.local
   - .eslintrc.json
   - .gitignore
   - app
@@ -26,6 +26,7 @@
     - vercel.svg
   - README.md
   - tailwind.config.js
+  - test.js
 - project_structure.text
 - server
   - .env
@@ -35,5 +36,4 @@
     - googleCalendar.js
   - package-lock.json
   - package.json
-  - test.js
   - vercel.json

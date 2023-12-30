@@ -25,10 +25,6 @@ app.get("/", (req, res) => {
   res.send("Hello, World from the Tejas's Server!");
 });
 
-app.get("/bhaibhai", (req, res) => {
-  res.send("bhaibhai");
-});
-
 // Display Events
 app.get("/api/display-events", async (req, res) => {
   try {

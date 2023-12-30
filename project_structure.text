@@ -30,10 +30,10 @@
 - server
   - .env
   - .gitignore
-  - api
-    - index.js
+  - index.js
   - lib
     - googleCalendar.js
   - package-lock.json
   - package.json
+  - test.js
   - vercel.json

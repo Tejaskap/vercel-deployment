@@ -24,7 +24,12 @@ const TimeSlots = ({ timeSlots, data, selectedDate, onAddNow }) => {
   };
 
   const availableTimeSlots = useMemo(() => {
-    if (!selectedDate) {
+    if (
+      !selectedDate ||
+      !data ||
+      !data.calendar1Events ||
+      !data.calendar2Events
+    ) {
       return [];
     }
 
@@ -47,40 +52,125 @@ const TimeSlots = ({ timeSlots, data, selectedDate, onAddNow }) => {
         0
       );
 
-      return !data.some((event) => {
-        const eventStartTime = new Date(event.start.dateTime);
-        const eventEndTime = new Date(event.end.dateTime);
+      // Check if the slot overlaps with any event in either calendar
+      return !(
+        data.calendar1Events.some((event) => {
+          const eventStartTime =
+            event.start && event.start.dateTime
+              ? new Date(event.start.dateTime)
+              : null;
+          const eventEndTime =
+            event.end && event.end.dateTime
+              ? new Date(event.end.dateTime)
+              : null;
 
-        const isOverlapCalendar1 = isTimeOverlap(
-          eventStartTime,
-          eventEndTime,
-          slotStartTime,
-          slotEndTime
-        );
+          // Check if the start and end properties exist before using them
+          const isValid = eventStartTime && eventEndTime;
 
-        const isOverlapCalendar2 = isTimeOverlap(
-          eventStartTime,
-          eventEndTime,
-          slotStartTime,
-          slotEndTime
-        );
+          if (isValid) {
+            return isTimeOverlap(
+              eventStartTime,
+              eventEndTime,
+              slotStartTime,
+              slotEndTime
+            );
+          }
 
-        // Consider a slot available only if it's available in both calendars
-        return isOverlapCalendar1 && isOverlapCalendar2;
-      });
+          return false;
+        }) ||
+        data.calendar2Events.some((event) => {
+          const eventStartTime =
+            event.start && event.start.dateTime
+              ? new Date(event.start.dateTime)
+              : null;
+          const eventEndTime =
+            event.end && event.end.dateTime
+              ? new Date(event.end.dateTime)
+              : null;
+
+          // Check if the start and end properties exist before using them
+          const isValid = eventStartTime && eventEndTime;
+
+          if (isValid) {
+            return isTimeOverlap(
+              eventStartTime,
+              eventEndTime,
+              slotStartTime,
+              slotEndTime
+            );
+          }
+
+          return false;
+        })
+      );
     });
   }, [data, selectedDate, timeSlots]);
 
   useEffect(() => {
-    setIsLoading(true);
+    const fetchData = async () => {
+      try {
+        const startDateTime = new Date(selectedDate);
+        startDateTime.setHours(8, 0, 0, 0);
 
-    // Simulate an asynchronous operation (e.g., fetching data)
-    const delay = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+        const endDateTime = new Date(selectedDate);
+        endDateTime.setHours(20, 0, 0, 0);
 
-    return () => clearTimeout(delay);
-  }, [selectedDate, timeSlots]);
+        const result1 = await getData(
+          startDateTime.toISOString(),
+          endDateTime.toISOString(),
+          process.env.NEXT_PUBLIC_CALENDAR_ID_1
+        );
+
+        const result2 = await getData(
+          startDateTime.toISOString(),
+          endDateTime.toISOString(),
+          process.env.NEXT_PUBLIC_CALENDAR_ID_2
+        );
+
+        // Ensure that result1 and result2 have the expected structure
+        const isValidStructure =
+          result1.hasOwnProperty("calendar1Events") &&
+          result1.hasOwnProperty("calendar2Events") &&
+          Array.isArray(result1.calendar1Events) &&
+          Array.isArray(result1.calendar2Events) &&
+          result2.hasOwnProperty("calendar1Events") &&
+          result2.hasOwnProperty("calendar2Events") &&
+          Array.isArray(result2.calendar1Events) &&
+          Array.isArray(result2.calendar2Events);
+
+        if (!isValidStructure) {
+          throw new Error("Invalid data structure received from the server");
+        }
+
+        // Combine or manage results as needed
+        const combinedResults = {
+          calendar1Events: [
+            ...result1.calendar1Events,
+            ...result2.calendar1Events,
+          ],
+          calendar2Events: [
+            ...result1.calendar2Events,
+            ...result2.calendar2Events,
+          ],
+        };
+
+        if (
+          combinedResults.calendar1Events.length === 0 &&
+          combinedResults.calendar2Events.length === 0
+        ) {
+          throw new Error("No data received from the server");
+        }
+
+        setData(combinedResults);
+      } catch (error) {
+        console.error("Error fetching data:", error.message);
+      } finally {
+        setIsLoading(false); // Set loading to false after fetching data
+      }
+    };
+
+    fetchData();
+  }, [selectedDate]);
 
   const handleAddNow = (slot) => {
     const timeSlotString = `${slot.startTime} - ${slot.endTime}`;

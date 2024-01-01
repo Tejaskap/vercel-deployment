@@ -34,7 +34,6 @@ app.get("/api/display-events", async (req, res) => {
       endTime,
       calendarId
     );
-    console.log("json response", events);
     res.status(200).json(events).end();
   } catch (error) {
     console.log("this is an error", error);

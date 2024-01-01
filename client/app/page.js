@@ -31,7 +31,7 @@ function generateTimeSlots(startHour, endHour, interval) {
   return timeSlots;
 }
 
-async function getData(startTime, endTime, calendarId) {
+export async function getData(startTime, endTime, calendarId) {
   try {
     const res = await fetch(
       `${API_ENDPOINT_DISPLAY_EVENTS}?startTime=${startTime}&endTime=${endTime}&calendarId=${calendarId}`
@@ -93,10 +93,37 @@ export default function Home() {
         process.env.NEXT_PUBLIC_CALENDAR_ID_2
       );
 
-      // Combine or manage results as needed
-      const combinedResults = [...result1, ...result2];
+      // Ensure that result1 and result2 have the expected structure
+      const isValidStructure =
+        result1.hasOwnProperty("calendar1Events") &&
+        result1.hasOwnProperty("calendar2Events") &&
+        Array.isArray(result1.calendar1Events) &&
+        Array.isArray(result1.calendar2Events) &&
+        result2.hasOwnProperty("calendar1Events") &&
+        result2.hasOwnProperty("calendar2Events") &&
+        Array.isArray(result2.calendar1Events) &&
+        Array.isArray(result2.calendar2Events);
 
-      if (combinedResults.length === 0) {
+      if (!isValidStructure) {
+        throw new Error("Invalid data structure received from the server");
+      }
+
+      // Combine or manage results as needed
+      const combinedResults = {
+        calendar1Events: [
+          ...result1.calendar1Events,
+          ...result2.calendar1Events,
+        ],
+        calendar2Events: [
+          ...result1.calendar2Events,
+          ...result2.calendar2Events,
+        ],
+      };
+
+      if (
+        combinedResults.calendar1Events.length === 0 &&
+        combinedResults.calendar2Events.length === 0
+      ) {
         throw new Error("No data received from the server");
       }
 

@@ -51,12 +51,22 @@ const TimeSlots = ({ timeSlots, data, selectedDate, onAddNow }) => {
         const eventStartTime = new Date(event.start.dateTime);
         const eventEndTime = new Date(event.end.dateTime);
 
-        return isTimeOverlap(
+        const isOverlapCalendar1 = isTimeOverlap(
           eventStartTime,
           eventEndTime,
           slotStartTime,
           slotEndTime
         );
+
+        const isOverlapCalendar2 = isTimeOverlap(
+          eventStartTime,
+          eventEndTime,
+          slotStartTime,
+          slotEndTime
+        );
+
+        // Consider a slot available only if it's available in both calendars
+        return isOverlapCalendar1 && isOverlapCalendar2;
       });
     });
   }, [data, selectedDate, timeSlots]);

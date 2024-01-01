@@ -1,20 +1,34 @@
 const { google } = require("googleapis");
 require("dotenv").config();
+
 // Load environment variables
-const CREDENTIALS = JSON.parse(process.env.CREDENTIALS);
-const CALENDAR_ID = process.env.CALENDAR_ID;
+const CREDENTIALS_1 = JSON.parse(process.env.NEXT_PUBLIC_CREDENTIALS_1);
+const CREDENTIALS_2 = JSON.parse(process.env.NEXT_PUBLIC_CREDENTIALS_2);
+
+const CALENDAR_ID_1 = process.env.NEXT_PUBLIC_CALENDAR_ID_1;
+const CALENDAR_ID_2 = process.env.NEXT_PUBLIC_CALENDAR_ID_2;
+
 const SCOPES = "https://www.googleapis.com/auth/calendar";
 const TIMEOFFSET = "+01:00";
-// Create an auth object using JWT
-const auth = new google.auth.JWT(
-  CREDENTIALS.client_email,
+
+// Create auth objects using JWT for each calendar
+const auth1 = new google.auth.JWT(
+  CREDENTIALS_1.client_email,
   null,
-  CREDENTIALS.private_key,
+  CREDENTIALS_1.private_key,
   SCOPES
 );
 
-// Define the calendar object globally
-const calendar = google.calendar({ version: "v3", auth });
+const auth2 = new google.auth.JWT(
+  CREDENTIALS_2.client_email,
+  null,
+  CREDENTIALS_2.private_key,
+  SCOPES
+);
+
+// Define the calendar objects globally for each calendar
+const calendar1 = google.calendar({ version: "v3", auth: auth1 });
+const calendar2 = google.calendar({ version: "v3", auth: auth2 });
 
 // Define a utility function to pad zero
 const padZero = (value) => (value < 10 ? `0${value}` : value);
@@ -69,18 +83,30 @@ const insertEvent = async (event) => {
 };
 
 // Define the getEvents function
-const getEvents = async (dateTimeStart, dateTimeEnd) => {
+const getEvents = async (dateTimeStart, dateTimeEnd, calendarId) => {
   try {
-    const response = await calendar.events.list({
-      calendarId: CALENDAR_ID,
+    // Use calendar1 for the first calendar
+    const response = await calendar1.events.list({
+      calendarId: CALENDAR_ID_1,
       timeMin: dateTimeStart,
       timeMax: dateTimeEnd,
       timeZone: "Europe/Berlin",
     });
 
-    return response.data.items || [];
+    // Use calendar2 for the second calendar
+    const response1 = await calendar2.events.list({
+      calendarId: CALENDAR_ID_2,
+      timeMin: dateTimeStart,
+      timeMax: dateTimeEnd,
+      timeZone: "Europe/Berlin",
+    });
+
+    return {
+      calendar1Events: response.data.items || [],
+      calendar2Events: response1.data.items || [],
+    };
   } catch (error) {
-    console.log(`Error at getEvents --> ${error.message}`);
+    console.error(`Error at getEvents --> ${error.message}`);
     return [];
   }
 };
@@ -89,7 +115,7 @@ const getEvents = async (dateTimeStart, dateTimeEnd) => {
 const deleteEvent = async (eventId) => {
   try {
     const response = await calendar.events.delete({
-      calendarId: CALENDAR_ID,
+      calendarId: CALENDAR_ID_1,
       eventId,
     });
 
@@ -101,8 +127,8 @@ const deleteEvent = async (eventId) => {
 };
 
 // Define the displayEventTimes function
-const displayEventTimes = async (startDateTime, endDateTime) => {
-  const events = await getEvents(startDateTime, endDateTime);
+const displayEventTimes = async (startDateTime, endDateTime, calendarId) => {
+  const events = await getEvents(startDateTime, endDateTime, calendarId);
   return events;
 };
 

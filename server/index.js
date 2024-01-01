@@ -28,8 +28,12 @@ app.get("/", (req, res) => {
 // Display Events
 app.get("/api/display-events", async (req, res) => {
   try {
-    const { startTime, endTime } = req.query;
-    const events = await googleCalendar.displayEventTimes(startTime, endTime);
+    const { startTime, endTime, calendarId } = req.query;
+    const events = await googleCalendar.displayEventTimes(
+      startTime,
+      endTime,
+      calendarId
+    );
     console.log("json response", events);
     res.status(200).json(events).end();
   } catch (error) {

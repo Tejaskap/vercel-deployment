@@ -2,6 +2,9 @@
   - .env.local
   - .eslintrc.json
   - .gitignore
+  - .vercel
+    - project.json
+    - README.txt
   - app
     - components
       - BookingForm.js
@@ -26,11 +29,14 @@
     - vercel.svg
   - README.md
   - tailwind.config.js
-  - test.js
+- Note.md
 - project_structure.text
 - server
   - .env
   - .gitignore
+  - .vercel
+    - project.json
+    - README.txt
   - index.js
   - lib
     - googleCalendar.js

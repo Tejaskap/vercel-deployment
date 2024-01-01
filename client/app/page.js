@@ -5,13 +5,14 @@ import React, { useState, useEffect } from "react";
 import CalendarComponent from "./components/CalendarComponent";
 import TimeSlots from "./components/TimeSlots";
 import BookingForm from "./components/BookingForm";
+
 // Constants
 const API_BASE_URL =
   `${process.env.NEXT_PUBLIC_CURRENT_ENV}` === "development"
     ? `${process.env.NEXT_PUBLIC_LOCAL_URL}`
     : `${process.env.NEXT_PUBLIC_API_URL}`;
 
-const API_ENDPOINT = `${API_BASE_URL}/api/display-events`;
+const API_ENDPOINT_DISPLAY_EVENTS = `${API_BASE_URL}/api/display-events`;
 const API_ENDPOINT_CREATE_EVENT = `${API_BASE_URL}/api/create-event`;
 const WORK_HOURS_START = 8;
 const WORK_HOURS_END = 20;
@@ -30,10 +31,10 @@ function generateTimeSlots(startHour, endHour, interval) {
   return timeSlots;
 }
 
-async function getData(startTime, endTime) {
+async function getData(startTime, endTime, calendarId) {
   try {
     const res = await fetch(
-      `${API_ENDPOINT}?startTime=${startTime}&endTime=${endTime}`
+      `${API_ENDPOINT_DISPLAY_EVENTS}?startTime=${startTime}&endTime=${endTime}&calendarId=${calendarId}`
     );
 
     if (!res.ok) {
@@ -41,7 +42,7 @@ async function getData(startTime, endTime) {
     }
     return res.json();
   } catch (error) {
-    console.error("Error fetching data:", error.message);
+    console.error("Error fetching data at getData:", error.message);
     return [];
   }
 }
@@ -80,22 +81,28 @@ export default function Home() {
   // Fetch data from the server
   const fetchData = async (startDateTime, endDateTime) => {
     try {
-      console.log(
-        "Fetching data with startTime and endTime:",
-        startDateTime,
-        endDateTime
-      );
-      const result = await getData(
+      const result1 = await getData(
         startDateTime.toISOString(),
-        endDateTime.toISOString()
+        endDateTime.toISOString(),
+        process.env.NEXT_PUBLIC_CALENDAR_ID_1
       );
-      if (!result) {
-        throw new Error("Invalid data received from the server");
+
+      const result2 = await getData(
+        startDateTime.toISOString(),
+        endDateTime.toISOString(),
+        process.env.NEXT_PUBLIC_CALENDAR_ID_2
+      );
+
+      // Combine or manage results as needed
+      const combinedResults = [...result1, ...result2];
+
+      if (combinedResults.length === 0) {
+        throw new Error("No data received from the server");
       }
-      setData(result);
+
+      setData(combinedResults);
     } catch (error) {
-      console.log("Full error", error);
-      console.error("Error fetching data:", error.message);
+      console.error("Error fetching data at fetch data:", error.message);
     }
   };
 
